@@ -53,7 +53,10 @@ if [ ! -f "src/artisan" ]; then
     echo ""
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo -e "${GREEN}Creating new Laravel project in src/ directory...${NC}"
-        ./scripts/composer create-project laravel/laravel src --prefer-dist
+         # remove everithing inside src folder
+        rm -rf src/*
+        # install laravel
+        ./scripts/composer create-project laravel/laravel . --prefer-dist
         
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}✅ Laravel project created successfully${NC}"
@@ -73,52 +76,52 @@ if [ ! -f "src/artisan" ]; then
         exit 0
     fi
 fi
-else
-    echo -e "${GREEN}✅ Laravel application found${NC}"
+
+echo -e "${GREEN}✅ Laravel application found${NC}"
     
-    # Install Composer dependencies
-    echo -e "${GREEN}Installing Composer dependencies...${NC}"
-    ./scripts/composer install
+# Install Composer dependencies
+echo -e "${GREEN}Installing Composer dependencies...${NC}"
+./scripts/composer install
     
-    # Generate application key if needed
-    if [ -f "src/.env" ]; then
-        if ! grep -q "APP_KEY=" src/.env 2>/dev/null || grep -q "APP_KEY=$" src/.env 2>/dev/null; then
-            echo -e "${GREEN}Generating application key...${NC}"
-            ./scripts/artisan key:generate
-        fi
-        
-        # Update database configuration
-        echo -e "${GREEN}Updating database configuration...${NC}"
-        sed -i.bak 's/DB_HOST=.*/DB_HOST=mysql/' src/.env
-        sed -i.bak 's/DB_DATABASE=.*/DB_DATABASE=laravel/' src/.env  
-        sed -i.bak 's/DB_USERNAME=.*/DB_USERNAME=laravel_user/' src/.env
-        sed -i.bak 's/DB_PASSWORD=.*/DB_PASSWORD=laravel_password/' src/.env
-        
-        # Add Redis configuration if not present
-        if ! grep -q "REDIS_HOST=" src/.env; then
-            echo -e "${GREEN}Adding Redis configuration...${NC}"
-            echo "" >> src/.env
-            echo "REDIS_HOST=redis" >> src/.env
-            echo "REDIS_PASSWORD=null" >> src/.env
-            echo "REDIS_PORT=6379" >> src/.env
-            echo "" >> src/.env
-            echo "CACHE_DRIVER=redis" >> src/.env
-            echo "SESSION_DRIVER=redis" >> src/.env
-            echo "QUEUE_CONNECTION=redis" >> src/.env
-        fi
-        
-        # Remove backup files
-        rm -f src/.env.bak
+# Generate application key if needed
+if [ -f "src/.env" ]; then
+    if ! grep -q "APP_KEY=" src/.env 2>/dev/null || grep -q "APP_KEY=$" src/.env 2>/dev/null; then
+        echo -e "${GREEN}Generating application key...${NC}"
+        ./scripts/artisan key:generate
     fi
-    
-    # Run migrations
-    echo -e "${GREEN}Running database migrations...${NC}"
-    ./scripts/artisan migrate --force
-    
-    # Install NPM dependencies
-    echo -e "${GREEN}Installing NPM dependencies...${NC}"
-    ./scripts/npm install
+        
+    # Update database configuration
+    echo -e "${GREEN}Updating database configuration...${NC}"
+    sed -i.bak 's/DB_HOST=.*/DB_HOST=mysql/' src/.env
+    sed -i.bak 's/DB_DATABASE=.*/DB_DATABASE=laravel/' src/.env  
+    sed -i.bak 's/DB_USERNAME=.*/DB_USERNAME=laravel_user/' src/.env
+    sed -i.bak 's/DB_PASSWORD=.*/DB_PASSWORD=laravel_password/' src/.env
+        
+    # Add Redis configuration if not present
+    if ! grep -q "REDIS_HOST=" src/.env; then
+        echo -e "${GREEN}Adding Redis configuration...${NC}"
+        echo "" >> src/.env
+        echo "REDIS_HOST=redis" >> src/.env
+        echo "REDIS_PASSWORD=null" >> src/.env
+        echo "REDIS_PORT=6379" >> src/.env
+        echo "" >> src/.env
+        echo "CACHE_DRIVER=redis" >> src/.env
+        echo "SESSION_DRIVER=redis" >> src/.env
+        echo "QUEUE_CONNECTION=redis" >> src/.env
+    fi
+        
+    # Remove backup files
+    rm -f src/.env.bak
 fi
+    
+# Run migrations
+echo -e "${GREEN}Running database migrations...${NC}"
+./scripts/artisan migrate --force
+    
+# Install NPM dependencies
+echo -e "${GREEN}Installing NPM dependencies...${NC}"
+./scripts/npm install
+
 
 # Display service status
 echo ""

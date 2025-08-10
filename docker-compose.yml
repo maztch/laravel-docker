@@ -155,7 +155,7 @@ services:
       - "${VITE_PORT}:5173"      # Alternative Vite port
     environment:
       - NODE_ENV=${NODE_ENV}
-    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    #command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
     networks:
       - laravel_network
 
