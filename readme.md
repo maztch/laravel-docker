@@ -1,6 +1,6 @@
 # Laravel Docker Environment
 
-A complete Docker-based development environment for Laravel applications with nginx, PHP 8.4, MySQL, Redis, phpMyAdmin, and Node.js.
+A complete Docker-based development environment for Laravel applications with nginx, PHP 8.4, PostgreSQL, Redis, phpMyAdmin, and Node.js.
 
 ## 🚀 Quick Start
 
@@ -188,9 +188,9 @@ echo "QUEUE_CONNECTION=redis" >> src/.env
 |---------|-----------|------|---------|
 | **Nginx** | `laravel_nginx` | 80, 443 | Web server & reverse proxy |
 | **PHP** | `laravel_php` | 9000 | PHP 8.4-FPM application server |
-| **MySQL** | `laravel_mysql` | 3306 | Database server |
+| **PostreSQL** | `laravel_postgresql` | 5432 | Database server |
 | **Redis** | `laravel_redis` | 6379 | Cache & session storage |
-| **phpMyAdmin** | `laravel_phpmyadmin` | 8080 | Database management |
+| **Pgadmin** | `laravel_pgadmin` | 8080 | Database management |
 | **Node.js** | `laravel_node` | 3000, 5173 | Frontend asset compilation |
 | **Queue** | `laravel_queue` | - | Laravel queue worker |
 | **Scheduler** | `laravel_scheduler` | - | Laravel task scheduler |
@@ -206,19 +206,22 @@ COMPOSE_PROJECT_NAME=laravel-app
 
 # Service Versions
 PHP_VERSION=8.4
-MYSQL_VERSION=8.0
+POSTGRESQL_VERSION=16
 NODE_VERSION=18-alpine
 
-# Database Settings
-MYSQL_DATABASE=laravel
-MYSQL_USER=laravel_user
-MYSQL_PASSWORD=laravel_password
-MYSQL_ROOT_PASSWORD=root_password
+# PostgreSQL Configuration
+POSTGRESQL_DATABASE=laravel
+POSTGRESQL_USER=laravel_user
+POSTGRESQL_PASSWORD=laravel_password
+
+# pgAdmin Configuration
+PGADMIN_EMAIL=admin@example.com
+PGADMIN_PASSWORD=admin_password
 
 # Port Configuration
 HTTP_PORT=80
-MYSQL_PORT=3306
-PHPMYADMIN_PORT=8080
+POSTGRESQL_PORT=5432
+PGADMIN_PORT=8080
 VITE_PORT=5173
 ```
 
@@ -226,7 +229,7 @@ VITE_PORT=5173
 The `src/.env` file contains your Laravel application settings:
 
 ```env
-DB_HOST=mysql
+DB_HOST=postresql
 DB_DATABASE=laravel
 DB_USERNAME=laravel_user
 DB_PASSWORD=laravel_password
@@ -284,14 +287,14 @@ docker-compose up -d
 
 ### Database Operations
 ```bash
-# Connect to MySQL shell
-./scripts/mysql
+# Connect to PostreSQL shell
+./scripts/psql
 
 # Create database dump
-./scripts/mysql dump
+./scripts/psql dump
 
 # Import SQL file
-./scripts/mysql import backup.sql
+./scripts/psql import backup.sql
 
 # Run migrations
 ./scripts/artisan migrate
@@ -334,7 +337,7 @@ All scripts support direct command execution:
 ### Container Management
 ```bash
 # Start specific services
-docker-compose up -d nginx php mysql
+docker-compose up -d nginx php postresql
 
 # Rebuild containers
 docker-compose up -d --build
@@ -373,7 +376,7 @@ docker-compose ps
 # Specific service
 ./scripts/logs php
 ./scripts/logs nginx
-./scripts/logs mysql
+./scripts/logs postgresql
 
 # Last 50 lines without following
 ./scripts/logs php --tail 50 --no-follow
@@ -384,8 +387,8 @@ docker-compose ps
 # Redis info
 ./scripts/redis info
 
-# MySQL processes
-./scripts/mysql -e "SHOW PROCESSLIST;"
+# PostreSQL processes
+./scripts/psql -e "SHOW PROCESSLIST;"
 
 # Container resource usage
 docker stats
@@ -411,7 +414,7 @@ docker stats
 
 ### Production Setup
 1. Change default passwords in `.env`
-2. Use strong `MYSQL_ROOT_PASSWORD`
+2. Use strong `POSTGRESQL_PASSWORD`
 3. Configure SSL certificates in `docker/nginx/ssl/`
 4. Set `APP_ENV=production` in Laravel `.env`
 5. Use `APP_DEBUG=false` in production
@@ -427,7 +430,7 @@ Place SSL certificates in `docker/nginx/ssl/` and update nginx configuration.
 ```bash
 # Change ports in .env file
 HTTP_PORT=8080
-MYSQL_PORT=3307
+POSTGRESQL_PORT=5433
 ```
 
 **Permission Denied**
@@ -442,8 +445,8 @@ sudo chown -R www-data:www-data src/storage src/bootstrap/cache
 
 **Database Connection Failed**
 ```bash
-# Check if MySQL is running
-./scripts/logs mysql
+# Check if PostreSQL is running
+./scripts/logs postgresql
 
 # Verify credentials in src/.env match docker .env
 ```
@@ -481,7 +484,7 @@ This project is open-sourced software licensed under the [MIT license](https://o
 
 ✅ **Laravel-ready environment** with PHP 8.4  
 ✅ **Frontend tooling** with Vite and hot reload  
-✅ **Database management** with MySQL and phpMyAdmin  
+✅ **Database management** with PostgreSql and Pgadmin 
 ✅ **Caching** with Redis  
 ✅ **Queue processing** and task scheduling  
 ✅ **Development scripts** for common tasks  
