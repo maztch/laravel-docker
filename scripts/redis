@@ -1,0 +1,61 @@
+#!/bin/bash
+# scripts/redis
+# Execute Redis commands or connect to Redis CLI
+
+# Colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+# Load environment variables
+if [ -f .env ]; then
+    export $(cat .env | grep -v '^#' | xargs)
+fi
+
+CONTAINER_NAME="${COMPOSE_PROJECT_NAME:-laravel-app}_redis"
+
+# Check if container is running
+if ! docker ps --format "table {{.Names}}" | grep -q "^${CONTAINER_NAME}$"; then
+    echo -e "${YELLOW}Warning: Redis container '${CONTAINER_NAME}' is not running${NC}"
+    echo "Starting containers..."
+    docker-compose up -d redis
+    sleep 3
+fi
+
+# If no arguments provided, connect to Redis CLI
+if [ $# -eq 0 ]; then
+    echo -e "${GREEN}Connecting to Redis CLI...${NC}"
+    docker-compose exec redis redis-cli
+else
+    case "$1" in
+        "flush")
+            echo -e "${GREEN}Flushing Redis database...${NC}"
+            docker-compose exec redis redis-cli FLUSHDB
+            ;;
+        "flushall")
+            echo -e "${GREEN}Flushing all Redis databases...${NC}"
+            docker-compose exec redis redis-cli FLUSHALL
+            ;;
+        "info")
+            echo -e "${GREEN}Redis server info:${NC}"
+            docker-compose exec redis redis-cli INFO
+            ;;
+        "monitor")
+            echo -e "${GREEN}Monitoring Redis commands (Ctrl+C to stop)...${NC}"
+            docker-compose exec redis redis-cli MONITOR
+            ;;
+        "keys")
+            pattern="${2:-*}"
+            echo -e "${GREEN}Showing keys matching pattern: ${pattern}${NC}"
+            docker-compose exec redis redis-cli KEYS "$pattern"
+            ;;
+        "logs")
+            echo -e "${GREEN}Showing Redis logs...${NC}"
+            docker-compose logs -f redis
+            ;;
+        *)
+            echo -e "${GREEN}Executing: redis-cli $@${NC}"
+            docker-compose exec redis redis-cli "$@"
+            ;;
+    esac
+fi

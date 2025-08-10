@@ -1,0 +1,61 @@
+#!/bin/bash
+# scripts/mysql
+# Execute MySQL commands or connect to MySQL shell
+
+# Colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+# Load environment variables
+if [ -f .env ]; then
+    export $(cat .env | grep -v '^#' | xargs)
+fi
+
+CONTAINER_NAME="${COMPOSE_PROJECT_NAME:-laravel-app}_mysql"
+DB_NAME="${MYSQL_DATABASE:-laravel}"
+DB_USER="${MYSQL_USER:-laravel_user}"
+DB_PASS="${MYSQL_PASSWORD:-laravel_password}"
+
+# Check if container is running
+if ! docker ps --format "table {{.Names}}" | grep -q "^${CONTAINER_NAME}$"; then
+    echo -e "${YELLOW}Warning: MySQL container '${CONTAINER_NAME}' is not running${NC}"
+    echo "Starting containers..."
+    docker-compose up -d mysql
+    sleep 5
+fi
+
+# If no arguments provided, connect to MySQL shell
+if [ $# -eq 0 ]; then
+    echo -e "${GREEN}Connecting to MySQL shell...${NC}"
+    docker-compose exec mysql mysql -u"${DB_USER}" -p"${DB_PASS}" "${DB_NAME}"
+else
+    case "$1" in
+        "root")
+            echo -e "${GREEN}Connecting as root user...${NC}"
+            docker-compose exec mysql mysql -uroot -p"${MYSQL_ROOT_PASSWORD:-root_password}"
+            ;;
+        "dump")
+            echo -e "${GREEN}Creating database dump...${NC}"
+            DUMP_FILE="dump_$(date +%Y%m%d_%H%M%S).sql"
+            docker-compose exec mysql mysqldump -u"${DB_USER}" -p"${DB_PASS}" "${DB_NAME}" > "${DUMP_FILE}"
+            echo "Database dumped to: ${DUMP_FILE}"
+            ;;
+        "import")
+            if [ -z "$2" ]; then
+                echo -e "${YELLOW}Usage: ./scripts/mysql import <file.sql>${NC}"
+                exit 1
+            fi
+            echo -e "${GREEN}Importing database from $2...${NC}"
+            docker-compose exec -T mysql mysql -u"${DB_USER}" -p"${DB_PASS}" "${DB_NAME}" < "$2"
+            ;;
+        "logs")
+            echo -e "${GREEN}Showing MySQL logs...${NC}"
+            docker-compose logs -f mysql
+            ;;
+        *)
+            echo -e "${GREEN}Executing: mysql $@${NC}"
+            docker-compose exec mysql mysql -u"${DB_USER}" -p"${DB_PASS}" "${DB_NAME}" -e "$*"
+            ;;
+    esac
+fi

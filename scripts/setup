@@ -1,0 +1,152 @@
+#!/bin/bash
+# scripts/setup
+# Initial setup script for Laravel Docker environment
+
+# Colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+echo -e "${BLUE}🚀 Laravel Docker Environment Setup${NC}"
+echo "======================================"
+
+# Make all scripts executable
+echo -e "${GREEN}Making scripts executable...${NC}"
+chmod +x scripts/*
+
+# Check if Docker is running
+if ! docker info > /dev/null 2>&1; then
+    echo -e "${RED}❌ Docker is not running. Please start Docker and try again.${NC}"
+    exit 1
+fi
+
+# Check if Docker Compose is available
+if ! command -v docker-compose &> /dev/null; then
+    echo -e "${RED}❌ docker-compose not found. Please install Docker Compose.${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}✅ Docker environment is ready${NC}"
+
+# Build and start containers
+echo -e "${GREEN}Building and starting containers...${NC}"
+docker-compose up -d --build
+
+# Wait for containers to be ready
+echo -e "${YELLOW}Waiting for containers to be ready...${NC}"
+sleep 10
+
+# Check if Laravel app exists
+if [ ! -f "src/artisan" ]; then
+    echo -e "${YELLOW}⚠️  Laravel application not found in src/ directory${NC}"
+    echo -e "${BLUE}To create a new Laravel project:${NC}"
+    echo ""
+    echo -e "${GREEN}Option 1: Create Laravel project in src/ directory${NC}"
+    echo "  ./scripts/composer create-project laravel/laravel src"
+    echo ""
+    echo -e "${GREEN}Option 2: Copy existing Laravel project to src/ directory${NC}"
+    echo "  cp -r /path/to/your/laravel/project/* src/"
+    echo ""
+    read -p "Do you want to create a new Laravel project now? (y/n): " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo -e "${GREEN}Creating new Laravel project in src/ directory...${NC}"
+        ./scripts/composer create-project laravel/laravel src --prefer-dist
+        
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}✅ Laravel project created successfully${NC}"
+            
+            # Set up environment file
+            if [ -f "src/.env.example" ]; then
+                cp src/.env.example src/.env
+                echo -e "${GREEN}✅ Environment file created${NC}"
+            fi
+        else
+            echo -e "${RED}❌ Failed to create Laravel project${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${YELLOW}Skipping Laravel project creation${NC}"
+        echo -e "${BLUE}Remember to add your Laravel project to the src/ directory${NC}"
+        exit 0
+    fi
+fi
+else
+    echo -e "${GREEN}✅ Laravel application found${NC}"
+    
+    # Install Composer dependencies
+    echo -e "${GREEN}Installing Composer dependencies...${NC}"
+    ./scripts/composer install
+    
+    # Generate application key if needed
+    if [ -f "src/.env" ]; then
+        if ! grep -q "APP_KEY=" src/.env 2>/dev/null || grep -q "APP_KEY=$" src/.env 2>/dev/null; then
+            echo -e "${GREEN}Generating application key...${NC}"
+            ./scripts/artisan key:generate
+        fi
+        
+        # Update database configuration
+        echo -e "${GREEN}Updating database configuration...${NC}"
+        sed -i.bak 's/DB_HOST=.*/DB_HOST=mysql/' src/.env
+        sed -i.bak 's/DB_DATABASE=.*/DB_DATABASE=laravel/' src/.env  
+        sed -i.bak 's/DB_USERNAME=.*/DB_USERNAME=laravel_user/' src/.env
+        sed -i.bak 's/DB_PASSWORD=.*/DB_PASSWORD=laravel_password/' src/.env
+        
+        # Add Redis configuration if not present
+        if ! grep -q "REDIS_HOST=" src/.env; then
+            echo -e "${GREEN}Adding Redis configuration...${NC}"
+            echo "" >> src/.env
+            echo "REDIS_HOST=redis" >> src/.env
+            echo "REDIS_PASSWORD=null" >> src/.env
+            echo "REDIS_PORT=6379" >> src/.env
+            echo "" >> src/.env
+            echo "CACHE_DRIVER=redis" >> src/.env
+            echo "SESSION_DRIVER=redis" >> src/.env
+            echo "QUEUE_CONNECTION=redis" >> src/.env
+        fi
+        
+        # Remove backup files
+        rm -f src/.env.bak
+    fi
+    
+    # Run migrations
+    echo -e "${GREEN}Running database migrations...${NC}"
+    ./scripts/artisan migrate --force
+    
+    # Install NPM dependencies
+    echo -e "${GREEN}Installing NPM dependencies...${NC}"
+    ./scripts/npm install
+fi
+
+# Display service status
+echo ""
+echo -e "${BLUE}🎉 Setup Complete!${NC}"
+echo "=================="
+echo ""
+echo -e "${GREEN}Services Status:${NC}"
+docker-compose ps
+
+echo ""
+echo -e "${GREEN}🌐 Access URLs:${NC}"
+echo "• Laravel App:    http://localhost"
+echo "• Vite Dev:       http://localhost:5173"
+echo "• phpMyAdmin:     http://localhost:8080"
+echo ""
+echo -e "${GREEN}📋 Available Scripts:${NC}"
+echo "• ./scripts/artisan   - Laravel Artisan commands"
+echo "• ./scripts/composer  - Composer package manager"
+echo "• ./scripts/npm       - Node.js package manager"
+echo "• ./scripts/php       - PHP interpreter"
+echo "• ./scripts/mysql     - MySQL client"
+echo "• ./scripts/redis     - Redis client"
+echo "• ./scripts/logs      - View container logs"
+echo ""
+echo -e "${GREEN}🚀 Quick Start:${NC}"
+echo "• Start development: ./scripts/npm run dev"
+echo "• Run migrations:    ./scripts/artisan migrate"
+echo "• Clear cache:       ./scripts/artisan cache:clear"
+echo "• View logs:         ./scripts/logs php"
+echo ""
+echo -e "${YELLOW}Happy coding! 🎯${NC}"

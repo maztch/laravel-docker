@@ -1,0 +1,236 @@
+# Laravel Docker Scripts
+
+This directory contains utility scripts to interact with your Docker containers easily.
+
+## 🚀 Quick Start
+
+Run the setup script to get everything ready:
+
+```bash
+./scripts/setup
+```
+
+## 📋 Available Scripts
+
+### Core Laravel Scripts
+
+- **`./scripts/artisan`** - Execute Laravel Artisan commands
+- **`./scripts/composer`** - Run Composer commands
+- **`./scripts/php`** - Execute PHP commands
+
+### Frontend Development
+
+- **`./scripts/npm`** - Run NPM commands
+
+### Database & Cache
+
+- **`./scripts/mysql`** - MySQL client and utilities
+- **`./scripts/redis`** - Redis client and utilities
+
+### Utilities
+
+- **`./scripts/logs`** - View container logs
+- **`./scripts/setup`** - Initial environment setup
+
+---
+
+## 🔧 Script Usage
+
+### Artisan Commands
+```bash
+# Run migrations
+./scripts/artisan migrate
+
+# Create a controller
+./scripts/artisan make:controller UserController
+
+# Clear cache
+./scripts/artisan cache:clear
+
+# Interactive tinker shell
+./scripts/artisan tinker
+
+# List all commands (no arguments)
+./scripts/artisan
+```
+
+### Composer Commands
+```bash
+# Install dependencies
+./scripts/composer install
+
+# Add new package
+./scripts/composer require laravel/sanctum
+
+# Update packages
+./scripts/composer update
+
+# Show help (no arguments)
+./scripts/composer
+```
+
+### NPM Commands
+```bash
+# Install dependencies
+./scripts/npm install
+
+# Start development server
+./scripts/npm run dev
+
+# Build for production
+./scripts/npm run build
+
+# Show help (no arguments)
+./scripts/npm
+```
+
+### PHP Commands
+```bash
+# Check PHP version
+./scripts/php --version
+
+# Run a PHP file
+./scripts/php script.php
+
+# Interactive PHP shell (no arguments)
+./scripts/php
+```
+
+### MySQL Commands
+```bash
+# Connect to MySQL shell (no arguments)
+./scripts/mysql
+
+# Connect as root user
+./scripts/mysql root
+
+# Create database dump
+./scripts/mysql dump
+
+# Import SQL file
+./scripts/mysql import backup.sql
+
+# Show MySQL logs
+./scripts/mysql logs
+```
+
+### Redis Commands
+```bash
+# Connect to Redis CLI (no arguments)
+./scripts/redis
+
+# Flush current database
+./scripts/redis flush
+
+# Flush all databases
+./scripts/redis flushall
+
+# Show Redis info
+./scripts/redis info
+
+# List all keys
+./scripts/redis keys
+
+# Monitor Redis commands
+./scripts/redis monitor
+```
+
+### Logs Commands
+```bash
+# View PHP logs
+./scripts/logs php
+
+# View all service logs
+./scripts/logs all
+
+# View last 50 lines without following
+./scripts/logs nginx --tail 50 --no-follow
+
+# Show help (no arguments)
+./scripts/logs
+```
+
+---
+
+## 💡 Tips
+
+### Make Scripts Executable
+If you get permission denied errors:
+```bash
+chmod +x scripts/*
+```
+
+### Environment Variables
+All scripts automatically load environment variables from the root `.env` file.
+
+### Container Names
+Scripts automatically detect container names based on your `COMPOSE_PROJECT_NAME` setting.
+
+### Error Handling
+Scripts will automatically start containers if they're not running.
+
+---
+
+## 🔍 Troubleshooting
+
+### Container Not Found
+If you get "container not found" errors:
+```bash
+# Check running containers
+docker-compose ps
+
+# Start all services
+docker-compose up -d
+```
+
+### Permission Issues
+```bash
+# Fix script permissions
+chmod +x scripts/*
+
+# Fix Laravel storage permissions
+./scripts/artisan storage:link
+```
+
+### Database Connection Issues
+```bash
+# Check MySQL logs
+./scripts/logs mysql
+
+# Restart MySQL container
+docker-compose restart mysql
+```
+
+---
+
+## 🎯 Common Workflows
+
+### Starting a New Day
+```bash
+docker-compose up -d
+./scripts/npm run dev
+```
+
+### Installing New Package
+```bash
+./scripts/composer require vendor/package
+./scripts/artisan migrate  # if package has migrations
+```
+
+### Database Reset
+```bash
+./scripts/artisan migrate:fresh --seed
+```
+
+### Production Build
+```bash
+./scripts/npm run build
+./scripts/composer install --no-dev --optimize-autoloader
+```
+
+### Debugging
+```bash
+./scripts/logs php           # Check PHP errors
+./scripts/artisan tinker     # Interactive debugging
+./scripts/mysql              # Check database
+```

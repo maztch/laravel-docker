@@ -1,0 +1,52 @@
+#!/bin/bash
+# scripts/artisan
+# Execute Laravel Artisan commands in the PHP container
+
+# Colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+# Load environment variables
+if [ -f .env ]; then
+    export $(cat .env | grep -v '^#' | xargs)
+fi
+
+CONTAINER_NAME="${COMPOSE_PROJECT_NAME:-laravel-app}_php"
+
+# Check if container is running
+if ! docker ps --format "table {{.Names}}" | grep -q "^${CONTAINER_NAME}$"; then
+    echo -e "${YELLOW}Warning: PHP container '${CONTAINER_NAME}' is not running${NC}"
+    echo "Starting containers..."
+    docker-compose up -d php
+    sleep 3
+fi
+
+# If no arguments provided, list available commands
+if [ $# -eq 0 ]; then
+    echo -e "${GREEN}Common Artisan commands:${NC}"
+    echo "  migrate              - Run database migrations"
+    echo "  migrate:rollback     - Rollback migrations"
+    echo "  migrate:fresh        - Drop and recreate all tables"
+    echo "  make:controller      - Create controller"
+    echo "  make:model           - Create model"
+    echo "  make:migration       - Create migration"
+    echo "  make:seeder          - Create database seeder"
+    echo "  db:seed              - Run database seeders"
+    echo "  cache:clear          - Clear application cache"
+    echo "  config:clear         - Clear configuration cache"
+    echo "  route:list           - List all routes"
+    echo "  tinker               - Interact with your application"
+    echo "  serve                - Start development server"
+    echo ""
+    echo "Examples:"
+    echo "  ./scripts/artisan migrate"
+    echo "  ./scripts/artisan make:controller UserController"
+    echo "  ./scripts/artisan tinker"
+    echo ""
+    echo "For full list of commands:"
+    echo "  ./scripts/artisan list"
+else
+    echo -e "${GREEN}Executing: php artisan $@${NC}"
+    docker-compose exec php php artisan "$@"
+fi

@@ -1,0 +1,44 @@
+#!/bin/bash
+# scripts/npm
+# Execute NPM commands in the Node container
+
+# Colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+# Load environment variables
+if [ -f .env ]; then
+    export $(cat .env | grep -v '^#' | xargs)
+fi
+
+CONTAINER_NAME="${COMPOSE_PROJECT_NAME:-laravel-app}_node"
+
+# Check if container is running
+if ! docker ps --format "table {{.Names}}" | grep -q "^${CONTAINER_NAME}$"; then
+    echo -e "${YELLOW}Warning: Node container '${CONTAINER_NAME}' is not running${NC}"
+    echo "Starting containers..."
+    docker-compose up -d node
+    sleep 3
+fi
+
+# If no arguments provided, show help
+if [ $# -eq 0 ]; then
+    echo -e "${GREEN}NPM commands:${NC}"
+    echo "  install      - Install dependencies"
+    echo "  run dev      - Start development server"
+    echo "  run build    - Build for production"
+    echo "  run watch    - Build and watch for changes"
+    echo "  run lint     - Run ESLint"
+    echo "  run format   - Format code with Prettier"
+    echo "  list         - List installed packages"
+    echo "  outdated     - Check for outdated packages"
+    echo ""
+    echo "Examples:"
+    echo "  ./scripts/npm install"
+    echo "  ./scripts/npm run dev"
+    echo "  ./scripts/npm install vue@latest"
+else
+    echo -e "${GREEN}Executing: npm $@${NC}"
+    docker-compose exec node npm "$@"
+fi
