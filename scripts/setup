@@ -90,12 +90,15 @@ if [ -f "src/.env" ]; then
         ./scripts/artisan key:generate
     fi
         
-    # Update database configuration
-    echo -e "${GREEN}Updating database configuration...${NC}"
-    sed -i.bak 's/DB_HOST=.*/DB_HOST=mysql/' src/.env
-    sed -i.bak 's/DB_DATABASE=.*/DB_DATABASE=laravel/' src/.env  
+    # Update database configuration for PostgreSQL
+    echo -e "${GREEN}Updating database configuration for PostgreSQL...${NC}"
+    sed -i.bak 's/DB_CONNECTION=.*/DB_CONNECTION=pgsql/' src/.env
+    sed -i.bak 's/DB_HOST=.*/DB_HOST=postgresql/' src/.env
+    sed -i.bak 's/DB_PORT=.*/DB_PORT=5432/' src/.env  
+    sed -i.bak 's/DB_DATABASE=.*/DB_DATABASE=laravel/' src/.env
     sed -i.bak 's/DB_USERNAME=.*/DB_USERNAME=laravel_user/' src/.env
     sed -i.bak 's/DB_PASSWORD=.*/DB_PASSWORD=laravel_password/' src/.env
+    
         
     # Add Redis configuration if not present
     if ! grep -q "REDIS_HOST=" src/.env; then
@@ -114,9 +117,22 @@ if [ -f "src/.env" ]; then
     rm -f src/.env.bak
 fi
     
-# Run migrations
-echo -e "${GREEN}Running database migrations...${NC}"
-./scripts/artisan migrate --force
+# Wait a bit more for PostgreSQL to be fully ready
+echo -e "${YELLOW}Waiting for PostgreSQL to be ready...${NC}"
+sleep 10
+
+# Test database connection
+echo -e "${GREEN}Testing database connection...${NC}"
+if ./scripts/psql -c "SELECT version();" > /dev/null 2>&1; then
+    echo -e "${GREEN}✅ Database connection successful${NC}"
+    
+    # Run migrations
+    echo -e "${GREEN}Running database migrations...${NC}"
+    ./scripts/artisan migrate --force
+else
+    echo -e "${YELLOW}⚠️  Database connection failed, skipping migrations${NC}"
+    echo -e "${BLUE}You can run migrations later with: ./scripts/artisan migrate${NC}"
+fi
     
 # Install NPM dependencies
 echo -e "${GREEN}Installing NPM dependencies...${NC}"

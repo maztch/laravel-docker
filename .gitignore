@@ -1,3 +1,5 @@
 docker/mysql/data
 docker/redis/data
 src
+docker/pgadmin/data
+docker/postgresql/data
