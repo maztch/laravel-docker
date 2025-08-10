@@ -72,9 +72,9 @@ cp src/.env.example src/.env
 ./scripts/artisan key:generate
 
 # Update database settings in src/.env (should already be correct)
-DB_CONNECTION=mysql
-DB_HOST=mysql
-DB_PORT=3306
+DB_CONNECTION=psql
+DB_HOST=postgresql
+DB_PORT=5432
 DB_DATABASE=laravel
 DB_USERNAME=laravel_user
 DB_PASSWORD=laravel_password
@@ -116,14 +116,14 @@ project/
 │   ├── composer             # Composer package manager
 │   ├── npm                  # Node.js package manager
 │   ├── php                  # PHP interpreter
-│   ├── mysql                # MySQL client
+│   ├── postgresql           # PostgreSQL client
 │   ├── redis                # Redis client
 │   ├── logs                 # View container logs
 │   └── setup                # Initial setup script
 ├── docker/                   # Docker configuration files
 │   ├── nginx/               # Nginx configuration
 │   ├── php/                 # PHP-FPM configuration
-│   ├── mysql/               # MySQL configuration
+│   ├── postgresql/               # PostgreSQL configuration
 │   └── redis/               # Redis configuration
 └── src/                     # Your Laravel application goes here
     ├── .env                 # Laravel environment variables
@@ -157,7 +157,7 @@ cp src/.env.example src/.env
 ./scripts/artisan key:generate
 
 # 6. Update database config in src/.env
-sed -i 's/DB_HOST=127.0.0.1/DB_HOST=mysql/' src/.env
+sed -i 's/DB_HOST=127.0.0.1/DB_HOST=pgsql/' src/.env
 sed -i 's/DB_DATABASE=laravel/DB_DATABASE=laravel/' src/.env
 sed -i 's/DB_USERNAME=root/DB_USERNAME=laravel_user/' src/.env
 sed -i 's/DB_PASSWORD=/DB_PASSWORD=laravel_password/' src/.env
