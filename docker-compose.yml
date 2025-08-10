@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Nginx Web Server
   nginx:
@@ -67,8 +65,8 @@ services:
     environment:
       PMA_HOST: mysql
       PMA_PORT: ${MYSQL_PORT}
-      PMA_USER: root
-      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      PMA_USER: ${MYSQL_USER}
+      PMA_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - "${PHPMYADMIN_PORT}:80"

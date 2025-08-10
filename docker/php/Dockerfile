@@ -51,7 +51,7 @@ RUN echo "* * * * * cd /var/www/html && php artisan schedule:run >> /dev/null 2>
 COPY --chown=www:www . /var/www/html
 
 # Change current user to www
-USER w
+USER www
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
