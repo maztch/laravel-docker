@@ -23,8 +23,8 @@ if ! docker info > /dev/null 2>&1; then
 fi
 
 # Check if Docker Compose is available
-if ! command -v docker-compose &> /dev/null; then
-    echo -e "${RED}❌ docker-compose not found. Please install Docker Compose.${NC}"
+if ! command -v docker compose &> /dev/null; then
+    echo -e "${RED}❌ docker compose not found. Please install Docker Compose.${NC}"
     exit 1
 fi
 
@@ -32,7 +32,7 @@ echo -e "${GREEN}✅ Docker environment is ready${NC}"
 
 # Build and start containers
 echo -e "${GREEN}Building and starting containers...${NC}"
-docker-compose up -d --build
+docker compose up -d --build
 
 # Wait for containers to be ready
 echo -e "${YELLOW}Waiting for containers to be ready...${NC}"
@@ -129,7 +129,7 @@ echo -e "${BLUE}🎉 Setup Complete!${NC}"
 echo "=================="
 echo ""
 echo -e "${GREEN}Services Status:${NC}"
-docker-compose ps
+docker compose ps
 
 echo ""
 echo -e "${GREEN}🌐 Access URLs:${NC}"

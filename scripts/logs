@@ -86,10 +86,10 @@ fi
 case "$SERVICE" in
     "all")
         echo -e "${GREEN}Showing logs for all services...${NC}"
-        docker-compose logs $FOLLOW $TAIL
+        docker compose logs $FOLLOW $TAIL
         ;;
     *)
         echo -e "${GREEN}Showing logs for $SERVICE service...${NC}"
-        docker-compose logs $FOLLOW $TAIL $SERVICE
+        docker compose logs $FOLLOW $TAIL $SERVICE
         ;;
 esac

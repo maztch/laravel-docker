@@ -18,7 +18,7 @@ CONTAINER_NAME="${COMPOSE_PROJECT_NAME:-laravel-app}_php"
 if ! docker ps --format "table {{.Names}}" | grep -q "^${CONTAINER_NAME}$"; then
     echo -e "${YELLOW}Warning: PHP container '${CONTAINER_NAME}' is not running${NC}"
     echo "Starting containers..."
-    docker-compose up -d php
+    docker compose up -d php
     sleep 3
 fi
 
@@ -38,5 +38,5 @@ if [ $# -eq 0 ]; then
     echo "  ./scripts/composer dumpautoload"
 else
     echo -e "${GREEN}Executing: composer $@${NC}"
-    docker-compose exec php composer "$@"
+    docker compose exec php composer "$@"
 fi

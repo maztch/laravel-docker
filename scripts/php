@@ -18,15 +18,15 @@ CONTAINER_NAME="${COMPOSE_PROJECT_NAME:-laravel-app}_php"
 if ! docker ps --format "table {{.Names}}" | grep -q "^${CONTAINER_NAME}$"; then
     echo -e "${YELLOW}Warning: PHP container '${CONTAINER_NAME}' is not running${NC}"
     echo "Starting containers..."
-    docker-compose up -d php
+    docker compose up -d php
     sleep 3
 fi
 
 # If no arguments provided, start interactive shell
 if [ $# -eq 0 ]; then
     echo -e "${GREEN}Opening PHP interactive shell...${NC}"
-    docker-compose exec php php -a
+    docker compose exec php php -a
 else
     echo -e "${GREEN}Executing: php $@${NC}"
-    docker-compose exec php php "$@"
+    docker compose exec php php "$@"
 fi
