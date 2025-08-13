@@ -18,7 +18,7 @@ CONTAINER_NAME="${COMPOSE_PROJECT_NAME:-laravel-app}_node"
 if ! docker ps --format "table {{.Names}}" | grep -q "^${CONTAINER_NAME}$"; then
     echo -e "${YELLOW}Warning: Node container '${CONTAINER_NAME}' is not running${NC}"
     echo "Starting containers..."
-    docker-compose up -d node
+    docker compose up -d node
     sleep 3
 fi
 
@@ -40,5 +40,5 @@ if [ $# -eq 0 ]; then
     echo "  ./scripts/npm install vue@latest"
 else
     echo -e "${GREEN}Executing: npm $@${NC}"
-    docker-compose exec node npm "$@"
+    docker compose exec node npm "$@"
 fi

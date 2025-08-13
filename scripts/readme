@@ -177,10 +177,10 @@ Scripts will automatically start containers if they're not running.
 If you get "container not found" errors:
 ```bash
 # Check running containers
-docker-compose ps
+docker compose ps
 
 # Start all services
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Permission Issues
@@ -198,7 +198,7 @@ chmod +x scripts/*
 ./scripts/logs mysql
 
 # Restart MySQL container
-docker-compose restart mysql
+docker compose restart mysql
 ```
 
 ---
@@ -207,7 +207,7 @@ docker-compose restart mysql
 
 ### Starting a New Day
 ```bash
-docker-compose up -d
+docker compose up -d
 ./scripts/npm run dev
 ```
 

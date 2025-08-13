@@ -21,24 +21,24 @@ DB_PASS="${POSTGRESQL_PASSWORD:-laravel_password}"
 if ! docker ps --format "table {{.Names}}" | grep -q "^${CONTAINER_NAME}$"; then
     echo -e "${YELLOW}Warning: PostgreSQL container '${CONTAINER_NAME}' is not running${NC}"
     echo "Starting containers..."
-    docker-compose up -d postgresql
+    docker compose up -d postgresql
     sleep 5
 fi
 
 # If no arguments provided, connect to PostgreSQL shell
 if [ $# -eq 0 ]; then
     echo -e "${GREEN}Connecting to PostgreSQL shell...${NC}"
-    docker-compose exec postgresql psql -U "${DB_USER}" -d "${DB_NAME}"
+    docker compose exec postgresql psql -U "${DB_USER}" -d "${DB_NAME}"
 else
     case "$1" in
         "root")
             echo -e "${GREEN}Connecting as postgres superuser...${NC}"
-            docker-compose exec postgresql psql -U postgres
+            docker compose exec postgresql psql -U postgres
             ;;
         "dump")
             echo -e "${GREEN}Creating database dump...${NC}"
             DUMP_FILE="dump_$(date +%Y%m%d_%H%M%S).sql"
-            docker-compose exec postgresql pg_dump -U "${DB_USER}" "${DB_NAME}" > "${DUMP_FILE}"
+            docker compose exec postgresql pg_dump -U "${DB_USER}" "${DB_NAME}" > "${DUMP_FILE}"
             echo "Database dumped to: ${DUMP_FILE}"
             ;;
         "import")
@@ -47,19 +47,19 @@ else
                 exit 1
             fi
             echo -e "${GREEN}Importing database from $2...${NC}"
-            docker-compose exec -T postgresql psql -U "${DB_USER}" -d "${DB_NAME}" < "$2"
+            docker compose exec -T postgresql psql -U "${DB_USER}" -d "${DB_NAME}" < "$2"
             ;;
         "logs")
             echo -e "${GREEN}Showing PostgreSQL logs...${NC}"
-            docker-compose logs -f postgresql
+            docker compose logs -f postgresql
             ;;
         "vacuum")
             echo -e "${GREEN}Running VACUUM ANALYZE...${NC}"
-            docker-compose exec postgresql psql -U "${DB_USER}" -d "${DB_NAME}" -c "VACUUM ANALYZE;"
+            docker compose exec postgresql psql -U "${DB_USER}" -d "${DB_NAME}" -c "VACUUM ANALYZE;"
             ;;
         "size")
             echo -e "${GREEN}Database size information:${NC}"
-            docker-compose exec postgresql psql -U "${DB_USER}" -d "${DB_NAME}" -c "
+            docker compose exec postgresql psql -U "${DB_USER}" -d "${DB_NAME}" -c "
                 SELECT 
                     schemaname,
                     tablename,
@@ -76,7 +76,7 @@ else
             ;;
         *)
             echo -e "${GREEN}Executing: psql $@${NC}"
-            docker-compose exec postgresql psql -U "${DB_USER}" -d "${DB_NAME}" -c "$*"
+            docker compose exec postgresql psql -U "${DB_USER}" -d "${DB_NAME}" -c "$*"
             ;;
     esac
 fi
