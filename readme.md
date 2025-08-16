@@ -11,7 +11,7 @@ A complete Docker-based development environment for Laravel applications with ng
 ### 1. Clone and Setup
 ```bash
 # Clone your project or create new directory
-git clone <your-laravel-repo> laravel-docker
+git clone git@github.com:maztch/laravel-docker.git laravel-docker
 cd laravel-docker
 
 # make scripts executable
@@ -25,29 +25,26 @@ chmod +x scripts/*
 
 If you don't have an existing Laravel project, you can create a new one:
 
-**Option A: Create Laravel project directly in src/**
-```bash
-# Start containers first
-docker-compose up -d
+Laravel is ready for you: Visit [http://localhost](http://localhost)
 
-# Create new Laravel project in src/ directory
-./scripts/composer create-project laravel/laravel /tmp/laravel
-cp -r /tmp/laravel/* src/
-cp -r /tmp/laravel/.* src/ 2>/dev/null || true
-rm -rf /tmp/laravel
-
-# Or create it directly (if src/ is empty)
-./scripts/composer create-project laravel/laravel .
-```
-
-**Option B: Use the setup script (recommended)**
+**Option A: Use the setup script (recommended)**
 ```bash
 # The setup script will detect if Laravel is missing and guide you
 ./scripts/setup
 
-# If Laravel is not found, it will show instructions like:
-# "./scripts/composer create-project laravel/laravel ."
+# If Laravel is not found, it will ask you for a fresh install
 ```
+
+**Option B: Use your existing Laravel project directly in src/**
+```bash
+# Copy your Laravel project in src/ directory
+cp -r /your/laravel/* src/
+cp -r /tmp/laravel/.* src/ 2>/dev/null || true
+
+# Start containers
+docker-compose up -d
+```
+
 
 **Option C: Manual installation**
 ```bash
@@ -55,8 +52,7 @@ rm -rf /tmp/laravel
 docker-compose up -d
 
 # Install Laravel in src/ directory
-cd src/
-../scripts/composer create-project laravel/laravel . --prefer-dist
+./scripts/composer create-project laravel/laravel . --prefer-dist
 
 # Set proper permissions
 sudo chown -R $USER:$USER .
@@ -64,12 +60,18 @@ chmod -R 755 storage bootstrap/cache
 ```
 
 ### 3. Configure Laravel Environment
+
+If you have done a manual install or using an existing project you may need to configure it and/or install dependencies. If you used the setup with a fresh install it's already configured and ready to use.
+
 ```bash
 # Copy environment file (if not already done)
 cp src/.env.example src/.env
 
 # Generate application key
 ./scripts/artisan key:generate
+
+# Install composer dependencies
+./scripts/composer install
 
 # Update database settings in src/.env (should already be correct)
 DB_CONNECTION=mysql
@@ -109,18 +111,21 @@ QUEUE_CONNECTION=redis
 
 ```
 project/
-├── .env                      # Docker Compose configuration
-├── docker-compose.yml        # Container orchestration
-├── scripts/                  # Helper scripts for development
+├── .env                     # Docker Compose configuration
+├── docker-compose.yml       # Container orchestration
+├── scripts/                 # Helper scripts for development
 │   ├── artisan              # Laravel Artisan commands
 │   ├── composer             # Composer package manager
 │   ├── npm                  # Node.js package manager
 │   ├── php                  # PHP interpreter
 │   ├── mysql                # MySQL client
 │   ├── redis                # Redis client
+│   ├── crontab              # Cron service for schedule
+│   ├── queue                # Laravel job queue
 │   ├── logs                 # View container logs
-│   └── setup                # Initial setup script
-├── docker/                   # Docker configuration files
+│   ├── setup                # Initial setup script
+|   └── reset                # This scripts restarts all project
+├── docker/                  # Docker configuration files
 │   ├── nginx/               # Nginx configuration
 │   ├── php/                 # PHP-FPM configuration
 │   ├── mysql/               # MySQL configuration
@@ -139,7 +144,7 @@ If you're starting from scratch without an existing Laravel application:
 ### Complete Fresh Installation
 ```bash
 # 1. Clone or create project directory
-git clone <this-docker-repo> my-laravel-project
+git clone git@github.com:maztch/laravel-docker.git my-laravel-project
 cd my-laravel-project
 
 # 2. Start Docker containers

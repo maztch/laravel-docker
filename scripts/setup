@@ -45,11 +45,13 @@ if [ ! -f "src/artisan" ]; then
     echo ""
     echo -e "${GREEN}Option 1: Create Laravel project in src/ directory${NC}"
     echo "  ./scripts/composer create-project laravel/laravel src"
+    
     echo ""
     echo -e "${GREEN}Option 2: Copy existing Laravel project to src/ directory${NC}"
-    echo "  cp -r /path/to/your/laravel/project/* src/"
+    echo "  cp -r web/* src/"
+    
     echo ""
-    read -p "Do you want to create a new Laravel project now? (y/n): " -n 1 -r
+    read -p "Do you want to create a new Laravel project now? ([y/[n]): " -n 1 -r
     echo ""
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo -e "${GREEN}Creating new Laravel project in src/ directory...${NC}"

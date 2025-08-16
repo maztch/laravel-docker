@@ -1,0 +1,42 @@
+#!/bin/bash
+# scripts/reset
+# Reset script for Laravel Docker environment
+
+
+#ask confirmation before proceeding (default yes)
+read -p "Are you sure you want to reset the Docker environment? ([y]/n) " confirm
+if [ "$confirm" == "n" ]; then
+    echo "Reset cancelled."
+    exit 1
+fi
+
+# remove src content
+rm -rf src/*
+
+# remove docker data
+rm -rf docker/mysql/data
+rm -rf docker/redis/data
+
+# cleanup
+docker compose down --volumes --remove-orphans
+
+# get COMPOSE_PROJECT_NAME from .env file
+export $(grep -v '^#' .env | xargs)
+
+# ask confirmation for docker rebuild
+read -p "Do you want to remove all the Docker containers? (y/[n]) " confirm
+if [ "$confirm" == "y" ]; then
+    # remove matching containers
+    docker ps -a --filter "name=${COMPOSE_PROJECT_NAME}_" -q | xargs -r docker rm -f
+    
+    # remove matching volumes
+    docker volume ls --filter "name=${COMPOSE_PROJECT_NAME}_" -q | xargs -r docker volume rm
+    
+    # remove matching networks
+    docker network ls --filter "name=${COMPOSE_PROJECT_NAME}_" -q | xargs -r docker network rm
+    
+    # remove matching images (prefix match)
+    docker images "${COMPOSE_PROJECT_NAME}_*" --format "{{.ID}}" | xargs -r docker rmi -f
+fi
+
+echo "Docker environment reset complete."
