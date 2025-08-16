@@ -43,14 +43,14 @@ cp -r /your/laravel/* src/
 cp -r /tmp/laravel/.* src/ 2>/dev/null || true
 
 # Start containers
-docker-compose up -d
+docker compose up -d
 ```
 
 
 **Option C: Manual installation**
 ```bash
 # Start containers
-docker-compose up -d
+docker compose up -d
 
 # Install Laravel in src/ directory
 ./scripts/composer create-project laravel/laravel . --prefer-dist
@@ -149,7 +149,7 @@ git clone git@github.com:maztch/laravel-docker.git my-laravel-project
 cd my-laravel-project
 
 # 2. Start Docker containers
-docker-compose up -d
+docker compose up -d
 
 # 3. Create Laravel project
 ./scripts/composer create-project laravel/laravel src --prefer-dist
@@ -248,7 +248,7 @@ QUEUE_CONNECTION=redis
 ### Daily Development
 ```bash
 # Start all services
-docker-compose up -d
+docker compose up -d
 
 # Start frontend development server
 ./scripts/npm run dev
@@ -340,16 +340,16 @@ All scripts support direct command execution:
 ### Container Management
 ```bash
 # Start specific services
-docker-compose up -d nginx php mysql
+docker compose up -d nginx php mysql
 
 # Rebuild containers
-docker-compose up -d --build
+docker compose up -d --build
 
 # Stop all services
-docker-compose down
+docker compose down
 
 # View running containers
-docker-compose ps
+docker compose ps
 
 # Follow logs for specific service
 ./scripts/logs nginx -f
@@ -464,8 +464,8 @@ sudo chown -R www-data:www-data src/storage src/bootstrap/cache
 ### Reset Environment
 ```bash
 # Complete reset
-docker-compose down -v
-docker-compose up -d --build
+docker compose down -v
+docker compose up -d --build
 ./scripts/artisan migrate:fresh --seed
 ```
 
