@@ -9,6 +9,7 @@ A complete Docker-based development environment for Laravel applications with ng
 - Git (for cloning repositories)
 
 ### 1. Clone and Setup
+
 ```bash
 # Clone your project or create new directory
 git clone git@github.com:maztch/laravel-docker.git laravel-docker
@@ -21,11 +22,11 @@ chmod +x scripts/*
 ./scripts/setup
 ```
 
-### 2. Install Laravel (if starting fresh)
+Laravel is ready for you: Visit [http://localhost](http://localhost)
+
+### 2. Install Laravel (manual setup)
 
 If you don't have an existing Laravel project, you can create a new one:
-
-Laravel is ready for you: Visit [http://localhost](http://localhost)
 
 **Option A: Use the setup script (recommended)**
 ```bash
