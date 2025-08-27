@@ -16,10 +16,10 @@ git clone git@github.com:maztch/laravel-docker.git laravel-docker
 cd laravel-docker
 
 # make scripts executable
-chmod +x scripts/*
+chmod +x run/*
 
 # Run the setup script
-./scripts/setup
+./run/setup
 ```
 
 Laravel is ready for you: Visit [http://localhost](http://localhost)
@@ -31,7 +31,7 @@ If you don't have an existing Laravel project, you can create a new one:
 **Option A: Use the setup script (recommended)**
 ```bash
 # The setup script will detect if Laravel is missing and guide you
-./scripts/setup
+./run/setup
 
 # If Laravel is not found, it will ask you for a fresh install
 ```
@@ -53,7 +53,7 @@ docker compose up -d
 docker compose up -d
 
 # Install Laravel in src/ directory
-./scripts/composer create-project laravel/laravel . --prefer-dist
+./run/composer create-project laravel/laravel . --prefer-dist
 
 # Set proper permissions
 sudo chown -R $USER:$USER .
@@ -69,10 +69,10 @@ If you have done a manual install or using an existing project you may need to c
 cp src/.env.example src/.env
 
 # Generate application key
-./scripts/artisan key:generate
+./run/artisan key:generate
 
 # Install composer dependencies
-./scripts/composer install
+./run/composer install
 
 # Update database settings in src/.env (should already be correct)
 DB_CONNECTION=mysql
@@ -91,16 +91,16 @@ SESSION_DRIVER=redis
 QUEUE_CONNECTION=redis
 
 # Run initial migrations
-./scripts/artisan migrate
+./run/artisan migrate
 ```
 
 ### 4. Install Frontend Dependencies
 ```bash
 # Install NPM packages
-./scripts/npm install
+./run/npm install
 
 # Start development server (optional)
-./scripts/npm run dev
+./run/npm run dev
 ```
 
 ### 5. Access Your Application
@@ -114,7 +114,7 @@ QUEUE_CONNECTION=redis
 project/
 ├── .env                     # Docker Compose configuration
 ├── docker-compose.yml       # Container orchestration
-├── scripts/                 # Helper scripts for development
+├── run/                 # Helper scripts for development
 │   ├── artisan              # Laravel Artisan commands
 │   ├── composer             # Composer package manager
 │   ├── npm                  # Node.js package manager
@@ -152,7 +152,7 @@ cd my-laravel-project
 docker compose up -d
 
 # 3. Create Laravel project
-./scripts/composer create-project laravel/laravel src --prefer-dist
+./run/composer create-project laravel/laravel src --prefer-dist
 
 # 4. Set permissions (Linux/macOS)
 sudo chown -R $USER:$USER src/
@@ -160,7 +160,7 @@ chmod -R 755 src/storage src/bootstrap/cache
 
 # 5. Configure environment
 cp src/.env.example src/.env
-./scripts/artisan key:generate
+./run/artisan key:generate
 
 # 6. Update database config in src/.env
 sed -i 's/DB_HOST=127.0.0.1/DB_HOST=mysql/' src/.env
@@ -179,13 +179,13 @@ echo "SESSION_DRIVER=redis" >> src/.env
 echo "QUEUE_CONNECTION=redis" >> src/.env
 
 # 7. Run migrations
-./scripts/artisan migrate
+./run/artisan migrate
 
 # 8. Install frontend dependencies
-./scripts/npm install
+./run/npm install
 
 # 9. Start development
-./scripts/npm run dev
+./run/npm run dev
 ```
 
 ## 🐳 Services
@@ -251,71 +251,71 @@ QUEUE_CONNECTION=redis
 docker compose up -d
 
 # Start frontend development server
-./scripts/npm run dev
+./run/npm run dev
 
 # Watch logs
-./scripts/logs php
+./run/logs php
 ```
 
 ### Laravel Commands
 ```bash
 # Run Artisan commands
-./scripts/artisan migrate
-./scripts/artisan make:controller UserController
-./scripts/artisan tinker
+./run/artisan migrate
+./run/artisan make:controller UserController
+./run/artisan tinker
 
 # Composer operations
-./scripts/composer install
-./scripts/composer require laravel/sanctum
+./run/composer install
+./run/composer require laravel/sanctum
 
 # Clear application cache
-./scripts/artisan cache:clear
-./scripts/artisan config:clear
+./run/artisan cache:clear
+./run/artisan config:clear
 ```
 
 ### Frontend Development
 ```bash
 # Install NPM dependencies
-./scripts/npm install
+./run/npm install
 
 # Start development server with hot reload
-./scripts/npm run dev
+./run/npm run dev
 
 # Build for production
-./scripts/npm run build
+./run/npm run build
 
 # Run linting
-./scripts/npm run lint
+./run/npm run lint
 ```
 
 ### Database Operations
 ```bash
 # Connect to MySQL shell
-./scripts/mysql
+./run/mysql
 
 # Create database dump
-./scripts/mysql dump
+./run/mysql dump
 
 # Import SQL file
-./scripts/mysql import backup.sql
+./run/mysql import backup.sql
 
 # Run migrations
-./scripts/artisan migrate
+./run/artisan migrate
 
 # Seed database
-./scripts/artisan db:seed
+./run/artisan db:seed
 ```
 
 ### Cache Operations
 ```bash
 # Connect to Redis CLI
-./scripts/redis
+./run/redis
 
 # Clear Redis cache
-./scripts/redis flushdb
+./run/redis flushdb
 
 # Monitor Redis commands
-./scripts/redis monitor
+./run/redis monitor
 ```
 
 ## 🔧 Advanced Usage
@@ -325,16 +325,16 @@ All scripts support direct command execution:
 
 ```bash
 # Direct PHP execution
-./scripts/php -v
+./run/php -v
 
 # Custom Composer commands  
-./scripts/composer show --outdated
+./run/composer show --outdated
 
 # Custom NPM commands
-./scripts/npm audit
+./run/npm audit
 
 # Custom Artisan commands
-./scripts/artisan route:list
+./run/artisan route:list
 ```
 
 ### Container Management
@@ -352,21 +352,21 @@ docker compose down
 docker compose ps
 
 # Follow logs for specific service
-./scripts/logs nginx -f
+./run/logs nginx -f
 ```
 
 ### Production Deployment
 ```bash
 # Build production assets
-./scripts/npm run build
+./run/npm run build
 
 # Optimize Composer autoloader
-./scripts/composer install --no-dev --optimize-autoloader
+./run/composer install --no-dev --optimize-autoloader
 
 # Cache Laravel configuration
-./scripts/artisan config:cache
-./scripts/artisan route:cache
-./scripts/artisan view:cache
+./run/artisan config:cache
+./run/artisan route:cache
+./run/artisan view:cache
 ```
 
 ## 📊 Monitoring & Debugging
@@ -374,24 +374,24 @@ docker compose ps
 ### View Logs
 ```bash
 # All services
-./scripts/logs all
+./run/logs all
 
 # Specific service
-./scripts/logs php
-./scripts/logs nginx
-./scripts/logs mysql
+./run/logs php
+./run/logs nginx
+./run/logs mysql
 
 # Last 50 lines without following
-./scripts/logs php --tail 50 --no-follow
+./run/logs php --tail 50 --no-follow
 ```
 
 ### Performance Monitoring
 ```bash
 # Redis info
-./scripts/redis info
+./run/redis info
 
 # MySQL processes
-./scripts/mysql -e "SHOW PROCESSLIST;"
+./run/mysql -e "SHOW PROCESSLIST;"
 
 # Container resource usage
 docker stats
@@ -400,17 +400,17 @@ docker stats
 ### Common Debugging
 ```bash
 # Check Laravel logs
-./scripts/logs php
+./run/logs php
 
 # Test database connection
-./scripts/artisan tinker
+./run/artisan tinker
 # > DB::connection()->getPdo();
 
 # Check queue jobs
-./scripts/artisan queue:work --once
+./run/artisan queue:work --once
 
 # Verify Redis connection
-./scripts/redis ping
+./run/redis ping
 ```
 
 ## 🔒 Security Considerations
@@ -439,17 +439,17 @@ MYSQL_PORT=3307
 **Permission Denied**
 ```bash
 # Make scripts executable
-chmod +x scripts/*
+chmod +x run/*
 
 # Fix Laravel storage permissions
-./scripts/artisan storage:link
+./run/artisan storage:link
 sudo chown -R www-data:www-data src/storage src/bootstrap/cache
 ```
 
 **Database Connection Failed**
 ```bash
 # Check if MySQL is running
-./scripts/logs mysql
+./run/logs mysql
 
 # Verify credentials in src/.env match docker .env
 ```
@@ -457,8 +457,8 @@ sudo chown -R www-data:www-data src/storage src/bootstrap/cache
 **Node Modules Issues**
 ```bash
 # Clear node modules and reinstall
-./scripts/npm run clean
-./scripts/npm install
+./run/npm run clean
+./run/npm install
 ```
 
 ### Reset Environment
@@ -466,7 +466,7 @@ sudo chown -R www-data:www-data src/storage src/bootstrap/cache
 # Complete reset
 docker compose down -v
 docker compose up -d --build
-./scripts/artisan migrate:fresh --seed
+./run/artisan migrate:fresh --seed
 ```
 
 ## 🤝 Contributing
@@ -499,4 +499,17 @@ This project is open-sourced software licensed under the [MIT license](https://o
 
 **Happy coding! 🚀**
 
-For more detailed information about individual scripts, see [`scripts/README.md`](scripts/README.md).
+For more detailed information about individual scripts, see [`run/readme.md`](run/readme.md).
+
+## 📚 Useful commands
+
+After installing, useful commands:
+
+```bash
+run/artisan install:api
+run/composer require --dev "larastan/larastan:^3.0"
+run/vendor phpstan analyse --memory-limit=2G app
+run/composer require livewire/livewire
+```
+
+

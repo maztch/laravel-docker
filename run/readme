@@ -7,30 +7,30 @@ This directory contains utility scripts to interact with your Docker containers 
 Run the setup script to get everything ready:
 
 ```bash
-./scripts/setup
+./run/setup
 ```
 
 ## 📋 Available Scripts
 
 ### Core Laravel Scripts
 
-- **`./scripts/artisan`** - Execute Laravel Artisan commands
-- **`./scripts/composer`** - Run Composer commands
-- **`./scripts/php`** - Execute PHP commands
+- **`./run/artisan`** - Execute Laravel Artisan commands
+- **`./run/composer`** - Run Composer commands
+- **`./run/php`** - Execute PHP commands
 
 ### Frontend Development
 
-- **`./scripts/npm`** - Run NPM commands
+- **`./run/npm`** - Run NPM commands
 
 ### Database & Cache
 
-- **`./scripts/mysql`** - MySQL client and utilities
-- **`./scripts/redis`** - Redis client and utilities
+- **`./run/mysql`** - MySQL client and utilities
+- **`./run/redis`** - Redis client and utilities
 
 ### Utilities
 
-- **`./scripts/logs`** - View container logs
-- **`./scripts/setup`** - Initial environment setup
+- **`./run/logs`** - View container logs
+- **`./run/setup`** - Initial environment setup
 
 ---
 
@@ -39,115 +39,115 @@ Run the setup script to get everything ready:
 ### Artisan Commands
 ```bash
 # Run migrations
-./scripts/artisan migrate
+./run/artisan migrate
 
 # Create a controller
-./scripts/artisan make:controller UserController
+./run/artisan make:controller UserController
 
 # Clear cache
-./scripts/artisan cache:clear
+./run/artisan cache:clear
 
 # Interactive tinker shell
-./scripts/artisan tinker
+./run/artisan tinker
 
 # List all commands (no arguments)
-./scripts/artisan
+./run/artisan
 ```
 
 ### Composer Commands
 ```bash
 # Install dependencies
-./scripts/composer install
+./run/composer install
 
 # Add new package
-./scripts/composer require laravel/sanctum
+./run/composer require laravel/sanctum
 
 # Update packages
-./scripts/composer update
+./run/composer update
 
 # Show help (no arguments)
-./scripts/composer
+./run/composer
 ```
 
 ### NPM Commands
 ```bash
 # Install dependencies
-./scripts/npm install
+./run/npm install
 
 # Start development server
-./scripts/npm run dev
+./run/npm run dev
 
 # Build for production
-./scripts/npm run build
+./run/npm run build
 
 # Show help (no arguments)
-./scripts/npm
+./run/npm
 ```
 
 ### PHP Commands
 ```bash
 # Check PHP version
-./scripts/php --version
+./run/php --version
 
 # Run a PHP file
-./scripts/php script.php
+./run/php script.php
 
 # Interactive PHP shell (no arguments)
-./scripts/php
+./run/php
 ```
 
 ### MySQL Commands
 ```bash
 # Connect to MySQL shell (no arguments)
-./scripts/mysql
+./run/mysql
 
 # Connect as root user
-./scripts/mysql root
+./run/mysql root
 
 # Create database dump
-./scripts/mysql dump
+./run/mysql dump
 
 # Import SQL file
-./scripts/mysql import backup.sql
+./run/mysql import backup.sql
 
 # Show MySQL logs
-./scripts/mysql logs
+./run/mysql logs
 ```
 
 ### Redis Commands
 ```bash
 # Connect to Redis CLI (no arguments)
-./scripts/redis
+./run/redis
 
 # Flush current database
-./scripts/redis flush
+./run/redis flush
 
 # Flush all databases
-./scripts/redis flushall
+./run/redis flushall
 
 # Show Redis info
-./scripts/redis info
+./run/redis info
 
 # List all keys
-./scripts/redis keys
+./run/redis keys
 
 # Monitor Redis commands
-./scripts/redis monitor
+./run/redis monitor
 ```
 
 ### Logs Commands
 ```bash
 # View PHP logs
-./scripts/logs php
+./run/logs php
 
 # View all service logs
-./scripts/logs all
+./run/logs all
 
 # View last 50 lines without following
-./scripts/logs nginx --tail 50 --no-follow
+./run/logs nginx --tail 50 --no-follow
 
 # Show help (no arguments)
-./scripts/logs
+./run/logs
 ```
 
 ---
@@ -157,7 +157,7 @@ Run the setup script to get everything ready:
 ### Make Scripts Executable
 If you get permission denied errors:
 ```bash
-chmod +x scripts/*
+chmod +x run/*
 ```
 
 ### Environment Variables
@@ -186,16 +186,16 @@ docker compose up -d
 ### Permission Issues
 ```bash
 # Fix script permissions
-chmod +x scripts/*
+chmod +x run/*
 
 # Fix Laravel storage permissions
-./scripts/artisan storage:link
+./run/artisan storage:link
 ```
 
 ### Database Connection Issues
 ```bash
 # Check MySQL logs
-./scripts/logs mysql
+./run/logs mysql
 
 # Restart MySQL container
 docker compose restart mysql
@@ -208,29 +208,29 @@ docker compose restart mysql
 ### Starting a New Day
 ```bash
 docker compose up -d
-./scripts/npm run dev
+./run/npm run dev
 ```
 
 ### Installing New Package
 ```bash
-./scripts/composer require vendor/package
-./scripts/artisan migrate  # if package has migrations
+./run/composer require vendor/package
+./run/artisan migrate  # if package has migrations
 ```
 
 ### Database Reset
 ```bash
-./scripts/artisan migrate:fresh --seed
+./run/artisan migrate:fresh --seed
 ```
 
 ### Production Build
 ```bash
-./scripts/npm run build
-./scripts/composer install --no-dev --optimize-autoloader
+./run/npm run build
+./run/composer install --no-dev --optimize-autoloader
 ```
 
 ### Debugging
 ```bash
-./scripts/logs php           # Check PHP errors
-./scripts/artisan tinker     # Interactive debugging
-./scripts/mysql              # Check database
+./run/logs php           # Check PHP errors
+./run/artisan tinker     # Interactive debugging
+./run/mysql              # Check database
 ```
