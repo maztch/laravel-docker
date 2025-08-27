@@ -1,5 +1,5 @@
 #!/bin/bash
-# scripts/mysql
+# run/mysql
 # Execute MySQL commands or connect to MySQL shell
 
 # Colors for output
@@ -43,7 +43,7 @@ else
             ;;
         "import")
             if [ -z "$2" ]; then
-                echo -e "${YELLOW}Usage: ./scripts/mysql import <file.sql>${NC}"
+                echo -e "${YELLOW}Usage: ./run/mysql import <file.sql>${NC}"
                 exit 1
             fi
             echo -e "${GREEN}Importing database from $2...${NC}"

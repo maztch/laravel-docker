@@ -1,5 +1,5 @@
 #!/bin/bash
-# scripts/logs
+# run/logs
 # View Docker container logs
 
 # Colors for output
@@ -17,7 +17,7 @@ PROJECT_NAME="${COMPOSE_PROJECT_NAME:-laravel-app}"
 
 show_usage() {
     echo -e "${GREEN}Docker Logs Viewer${NC}"
-    echo -e "${YELLOW}Usage: ./scripts/logs [service] [options]${NC}"
+    echo -e "${YELLOW}Usage: ./run/logs [service] [options]${NC}"
     echo ""
     echo "Services:"
     echo "  nginx      - Web server logs"
@@ -35,9 +35,9 @@ show_usage() {
     echo "  --no-follow     - Don't follow log output"
     echo ""
     echo "Examples:"
-    echo "  ./scripts/logs php"
-    echo "  ./scripts/logs nginx --tail 50"
-    echo "  ./scripts/logs all --no-follow"
+    echo "  ./run/logs php"
+    echo "  ./run/logs nginx --tail 50"
+    echo "  ./run/logs all --no-follow"
 }
 
 # Default options

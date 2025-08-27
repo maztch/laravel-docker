@@ -1,5 +1,5 @@
 #!/bin/bash
-# scripts/cron
+# run/cron
 # Execute scheduled tasks
 
 # Colors for output

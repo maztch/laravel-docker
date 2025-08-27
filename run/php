@@ -1,5 +1,5 @@
 #!/bin/bash
-# scripts/php
+# run/php
 # Execute PHP commands in the PHP container
 
 # Colors for output

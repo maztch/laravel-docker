@@ -1,5 +1,5 @@
 #!/bin/bash
-# scripts/composer
+# run/composer
 # Execute Composer commands in the PHP container
 
 # Colors for output
@@ -33,9 +33,9 @@ if [ $# -eq 0 ]; then
     echo "  show         - Show installed packages"
     echo ""
     echo "Examples:"
-    echo "  ./scripts/composer install"
-    echo "  ./scripts/composer require laravel/sanctum"
-    echo "  ./scripts/composer dumpautoload"
+    echo "  ./run/composer install"
+    echo "  ./run/composer require laravel/sanctum"
+    echo "  ./run/composer dumpautoload"
 else
     echo -e "${GREEN}Executing: composer $@${NC}"
     docker compose exec php composer "$@"

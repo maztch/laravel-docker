@@ -1,5 +1,5 @@
 #!/bin/bash
-# scripts/queue
+# run/queue
 # Execute laravel queue commands
 
 # Colors for output

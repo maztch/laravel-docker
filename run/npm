@@ -1,5 +1,5 @@
 #!/bin/bash
-# scripts/npm
+# run/npm
 # Execute NPM commands in the Node container
 
 # Colors for output
@@ -35,9 +35,9 @@ if [ $# -eq 0 ]; then
     echo "  outdated     - Check for outdated packages"
     echo ""
     echo "Examples:"
-    echo "  ./scripts/npm install"
-    echo "  ./scripts/npm run dev"
-    echo "  ./scripts/npm install vue@latest"
+    echo "  ./run/npm install"
+    echo "  ./run/npm run dev"
+    echo "  ./run/npm install vue@latest"
 else
     echo -e "${GREEN}Executing: npm $@${NC}"
     docker compose exec node npm "$@"

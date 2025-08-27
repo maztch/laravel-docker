@@ -1,5 +1,5 @@
 #!/bin/bash
-# scripts/artisan
+# run/artisan
 # Execute Laravel Artisan commands in the PHP container
 
 # Colors for output
@@ -40,12 +40,12 @@ if [ $# -eq 0 ]; then
     echo "  serve                - Start development server"
     echo ""
     echo "Examples:"
-    echo "  ./scripts/artisan migrate"
-    echo "  ./scripts/artisan make:controller UserController"
-    echo "  ./scripts/artisan tinker"
+    echo "  ./run/artisan migrate"
+    echo "  ./run/artisan make:controller UserController"
+    echo "  ./run/artisan tinker"
     echo ""
     echo "For full list of commands:"
-    echo "  ./scripts/artisan list"
+    echo "  ./run/artisan list"
 else
     echo -e "${GREEN}Executing: php artisan $@${NC}"
     docker compose exec php php artisan "$@"

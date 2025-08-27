@@ -1,5 +1,5 @@
 #!/bin/bash
-# scripts/setup
+# run/setup
 # Initial setup script for Laravel Docker environment
 
 # Colors for output
@@ -14,7 +14,7 @@ echo "======================================"
 
 # Make all scripts executable
 echo -e "${GREEN}Making scripts executable...${NC}"
-chmod +x scripts/*
+chmod +x run/*
 
 # Check if Docker is running
 if ! docker info > /dev/null 2>&1; then
@@ -44,7 +44,7 @@ if [ ! -f "src/artisan" ]; then
     echo -e "${BLUE}To create a new Laravel project:${NC}"
     echo ""
     echo -e "${GREEN}Option 1: Create Laravel project in src/ directory${NC}"
-    echo "  ./scripts/composer create-project laravel/laravel src"
+    echo "  ./run/composer create-project laravel/laravel src"
     
     echo ""
     echo -e "${GREEN}Option 2: Copy existing Laravel project to src/ directory${NC}"
@@ -58,7 +58,7 @@ if [ ! -f "src/artisan" ]; then
          # remove everithing inside src folder
         rm -rf src/*
         # install laravel
-        ./scripts/composer create-project laravel/laravel . --prefer-dist
+        ./run/composer create-project laravel/laravel . --prefer-dist
         
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}✅ Laravel project created successfully${NC}"
@@ -83,13 +83,13 @@ echo -e "${GREEN}✅ Laravel application found${NC}"
     
 # Install Composer dependencies
 echo -e "${GREEN}Installing Composer dependencies...${NC}"
-./scripts/composer install
+./run/composer install
     
 # Generate application key if needed
 if [ -f "src/.env" ]; then
     if ! grep -q "APP_KEY=" src/.env 2>/dev/null || grep -q "APP_KEY=$" src/.env 2>/dev/null; then
         echo -e "${GREEN}Generating application key...${NC}"
-        ./scripts/artisan key:generate
+        ./run/artisan key:generate
     fi
         
     # Update database configuration
@@ -118,11 +118,11 @@ fi
     
 # Run migrations
 echo -e "${GREEN}Running database migrations...${NC}"
-./scripts/artisan migrate --force
+./run/artisan migrate --force
     
 # Install NPM dependencies
 echo -e "${GREEN}Installing NPM dependencies...${NC}"
-./scripts/npm install
+./run/npm install
 
 
 # Display service status
@@ -140,18 +140,18 @@ echo "• Vite Dev:       http://localhost:5173"
 echo "• phpMyAdmin:     http://localhost:8080"
 echo ""
 echo -e "${GREEN}📋 Available Scripts:${NC}"
-echo "• ./scripts/artisan   - Laravel Artisan commands"
-echo "• ./scripts/composer  - Composer package manager"
-echo "• ./scripts/npm       - Node.js package manager"
-echo "• ./scripts/php       - PHP interpreter"
-echo "• ./scripts/mysql     - MySQL client"
-echo "• ./scripts/redis     - Redis client"
-echo "• ./scripts/logs      - View container logs"
+echo "• ./run/artisan   - Laravel Artisan commands"
+echo "• ./run/composer  - Composer package manager"
+echo "• ./run/npm       - Node.js package manager"
+echo "• ./run/php       - PHP interpreter"
+echo "• ./run/mysql     - MySQL client"
+echo "• ./run/redis     - Redis client"
+echo "• ./run/logs      - View container logs"
 echo ""
 echo -e "${GREEN}🚀 Quick Start:${NC}"
-echo "• Start development: ./scripts/npm run dev"
-echo "• Run migrations:    ./scripts/artisan migrate"
-echo "• Clear cache:       ./scripts/artisan cache:clear"
-echo "• View logs:         ./scripts/logs php"
+echo "• Start development: ./run/npm run dev"
+echo "• Run migrations:    ./run/artisan migrate"
+echo "• Clear cache:       ./run/artisan cache:clear"
+echo "• View logs:         ./run/logs php"
 echo ""
 echo -e "${YELLOW}Happy coding! 🎯${NC}"

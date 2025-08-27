@@ -1,5 +1,5 @@
 #!/bin/bash
-# scripts/redis
+# run/redis
 # Execute Redis commands or connect to Redis CLI
 
 # Colors for output
