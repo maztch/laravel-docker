@@ -51,15 +51,31 @@ if [ ! -f "src/artisan" ]; then
     echo "  cp -r web/* src/"
     
     echo ""
-    read -p "Do you want to create a new Laravel project now? ([y/[n]): " -n 1 -r
+    read -p "Do you want to create a new Laravel project now? (y/[n]): " -n 1 -r
     echo ""
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo -e "${GREEN}Creating new Laravel project in src/ directory...${NC}"
-         # remove everithing inside src folder
+         # remove everything inside src folder
         rm -rf src/*
-        # install laravel
+        rm -rf src/.[!.]*
+
+        # install laravel basic way
         ./run/composer create-project laravel/laravel . --prefer-dist
-        
+
+        # install pest
+        # ./run/composer remove phpunit/phpunit
+        # ./run/composer require pestphp/pest --dev --with-all-dependencies
+        # echo "no" | docker compose exec -T php ./vendor/bin/pest --init
+
+        # docker compose exec php bash -lc '
+        #   rm -rf ./* &&
+        #   rm -rf ./.* &&
+        #   composer global require laravel/installer &&
+        #   ~/.composer/vendor/bin/laravel new --database=mysql --pest --silent --force laravel &&
+        #   mv laravel/* laravel/.[!.]* . &&
+        #   rm -rf laravel
+        # '
+
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}✅ Laravel project created successfully${NC}"
             
@@ -84,9 +100,9 @@ echo -e "${GREEN}✅ Laravel application found${NC}"
 # Install Composer dependencies
 echo -e "${GREEN}Installing Composer dependencies...${NC}"
 ./run/composer install
-    
-# Generate application key if needed
+
 if [ -f "src/.env" ]; then
+    # Generate application key if needed
     if ! grep -q "APP_KEY=" src/.env 2>/dev/null || grep -q "APP_KEY=$" src/.env 2>/dev/null; then
         echo -e "${GREEN}Generating application key...${NC}"
         ./run/artisan key:generate
@@ -94,10 +110,11 @@ if [ -f "src/.env" ]; then
         
     # Update database configuration
     echo -e "${GREEN}Updating database configuration...${NC}"
-    sed -i.bak 's/DB_HOST=.*/DB_HOST=mysql/' src/.env
-    sed -i.bak 's/DB_DATABASE=.*/DB_DATABASE=laravel/' src/.env  
-    sed -i.bak 's/DB_USERNAME=.*/DB_USERNAME=laravel_user/' src/.env
-    sed -i.bak 's/DB_PASSWORD=.*/DB_PASSWORD=laravel_password/' src/.env
+    sed -i.bak -E 's/^DB_CONNECTION=.*/DB_CONNECTION=mysql/' src/.env
+    sed -i.bak -E 's/^[[:space:]]*#?[[:space:]]*DB_HOST=.*/DB_HOST=mysql/' src/.env
+    sed -i.bak -E 's/^[[:space:]]*#?[[:space:]]*DB_DATABASE=.*/DB_DATABASE=laravel/' src/.env
+    sed -i.bak -E 's/^[[:space:]]*#?[[:space:]]*DB_USERNAME=.*/DB_USERNAME=laravel_user/' src/.env
+    sed -i.bak -E 's/^[[:space:]]*#?[[:space:]]*DB_PASSWORD=.*/DB_PASSWORD=laravel_password/' src/.env
         
     # Add Redis configuration if not present
     if ! grep -q "REDIS_HOST=" src/.env; then
@@ -111,6 +128,9 @@ if [ -f "src/.env" ]; then
         echo "SESSION_DRIVER=redis" >> src/.env
         echo "QUEUE_CONNECTION=redis" >> src/.env
     fi
+
+    # set redis host
+     sed -i.bak -E 's/^REDIS_HOST=.*/REDIS_HOST=redis/' src/.env
         
     # Remove backup files
     rm -f src/.env.bak

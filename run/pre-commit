@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# node
+run/npm run lint
+
+
+# php
+run/vendor phpstan analyse --memory-limit=2G app
+run/vendor phpcbf --standard=PSR12 app
+# vendor/bin/php-cs-fixer fix app --rules=@PSR12
+# vendor/bin/phpcs -v app --standard=PSR12
+# vendor/bin/pint --preset psr12
+# vendor/bin/phpmd app text phpmd.xml
+# php phpcpd.phar app
+
+run/artisan test

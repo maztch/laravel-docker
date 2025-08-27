@@ -24,10 +24,9 @@ fi
 
 # If no arguments provided, start interactive shell
 if [ $# -eq 0 ]; then
-    echo -e "${GREEN}Opening PHP interactive shell...${NC}"
-    #docker compose exec php php -a
+    echo -e "${GREEN}Opening interactive shell...${NC}"
     docker compose exec php bash
 else
-    echo -e "${GREEN}Executing: php $@${NC}"
-    docker compose exec php php "$@"
+    echo -e "${GREEN}Executing: vendor $@${NC}"
+    docker compose exec php vendor/bin/"$@"
 fi

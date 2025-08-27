@@ -164,7 +164,7 @@ networks:
   laravel_network:
     driver: bridge
 
-volumes:
-  mysql_data:
-  redis_data:
-  node_modules:
+#volumes:
+  #mysql_data:
+  #redis_data:
+  #node_modules:
